@@ -97,12 +97,17 @@ function buildFreshDatabase(): DatabaseSchema {
   return JSON.parse(JSON.stringify(parsed)) as DatabaseSchema;
 }
 
+type PortalStateDocument = {
+  _id: string;
+  state: DatabaseSchema;
+  updatedAt: Date;
+};
+
 class ServerAuthoritativeStore {
   private db: DatabaseSchema;
   private mutex = new AsyncMutex();
   private mongoClient: MongoClient | null = null;
-  private mongoCollection: Collection | null = null;
-  private pendingWrite: Promise<void> = Promise.resolve();
+  private mongoCollection: Collection<PortalStateDocument> | null = null;  private pendingWrite: Promise<void> = Promise.resolve();
   private persistenceError: unknown = null;
   public events = new EventEmitter();
 
@@ -128,7 +133,9 @@ class ServerAuthoritativeStore {
     });
     await this.mongoClient.connect();
     const databaseName = process.env.MONGODB_DATABASE || 'innohack';
-    this.mongoCollection = this.mongoClient.db(databaseName).collection('portalState');
+    this.mongoCollection = this.mongoClient
+      .db(databaseName)
+      .collection<PortalStateDocument>('portalState');
 
     const stored = await this.mongoCollection.findOne({ _id: MONGO_STATE_ID });
     if (stored?.state) {
@@ -213,7 +220,7 @@ class ServerAuthoritativeStore {
       .then(async () => {
         await this.mongoCollection!.replaceOne(
           { _id: MONGO_STATE_ID },
-          { _id: MONGO_STATE_ID, state: snapshot, updatedAt: new Date() },
+          { state: snapshot, updatedAt: new Date() },
           { upsert: true },
         );
         this.persistenceError = null;
