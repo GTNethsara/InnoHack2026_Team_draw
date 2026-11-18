@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ? 'ALL 30 DRAWS COMPLETED'
               : queuePaused
               ? 'QUEUE ADMISSIONS PAUSED'
-              : 'LIVE DRAW ACTIVE'}
+              : 'LIVE FIFO DRAW ACTIVE'}
           </div>
 
           {(route === 'dashboard' || route === 'admin') && (

@@ -44,9 +44,9 @@ export const CyberBackground: React.FC = () => {
 
 export const ArenaTicker: React.FC = () => {
   const items = [
-    'LIVE SPIN PORTAL',
+    'TEAM LEADER PORTAL',
     'SLIIT KANDY UNI',
-    'LIVE DRAW',
+    'LIVE FIFO DRAW QUEUE',
     '30 SQUADS · 3 GROUPS · 10 PER GROUP',
     'SERVER-AUTHORITATIVE SPIN',
     'INTER-UNIVERSITY AI HACKATHON',
